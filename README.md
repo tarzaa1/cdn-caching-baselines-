@@ -6,10 +6,10 @@ Scripts for evaluating proactive cache placement strategies on a two-cluster CDN
 
 | Script | Description |
 |---|---|
-| `all_hot_no_cache.py` | Moves all videos to hot storage and purges all edge caches. Run once to establish a clean experiment baseline. |
-| `static_global_topk.py` | Ranks videos by global views, pre-warms the top-K at every edge. Run once; never updated. |
+| `all_hot_no_cache.py` | Moves all videos to hot storage and purges all edge caches. |
+| `static_global_topk.py` | Ranks videos by global views, pre-warms the top-K at every edge. |
 | `periodic_global_topk.py` | Same as above, but re-runs on a fixed interval to track popularity changes over time. |
-| `periodic_regional_topk.py` | Periodic top-K per region — each edge is warmed with the videos most popular in that region. |
+| `periodic_regional_topk.py` | Same as above, but each edge is warmed with the videos most popular in that region. |
 
 ## Configuration
 
