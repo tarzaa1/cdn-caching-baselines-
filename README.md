@@ -34,15 +34,11 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-# Clean slate before an experiment
-python all_hot_no_cache.py
+python baselines/all_hot_no_cache.py
 
-# Static global top-K (run once)
-python static_global_topk.py
+python baselines/static_global_topk.py
 
-# Periodic global top-K (runs until interrupted)
-python periodic_global_topk.py
+python baselines/periodic_global_topk.py
 
-# Periodic regional top-K (runs until interrupted)
-python periodic_regional_topk.py
+python baselines/periodic_regional_topk.py
 ```
