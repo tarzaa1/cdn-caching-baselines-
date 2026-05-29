@@ -1,16 +1,3 @@
-"""
-Baseline 2 — Static global top-K.
-
-Run once at experiment start; never updated afterwards.
-
-  1. Fetch all videos and rank by global view count (descending).
-  2. Move the top-K to hot storage if not already there.
-  3. Warm every edge node with the top-K videos (full slice-level pre-warming).
-  4. Purge all other videos from every edge cache.
-
-K is configured via config.TOP_K.
-"""
-
 import logging
 import sys
 
@@ -26,7 +13,7 @@ log = logging.getLogger(__name__)
 
 
 def run() -> None:
-    log.info("=== Baseline 2: Static global top-%d ===", config.TOP_K)
+    log.info("Baseline 2: Static global top-%d", config.TOP_K)
 
     videos = api_client.get_all_videos()
 
@@ -40,22 +27,20 @@ def run() -> None:
         [v["key"] for v in top_k],
     )
 
-    # 1. Ensure top-K are on hot storage.
     for video in top_k:
         if video["storage"]["name"] != "hot":
             api_client.move_file(video["storage"]["name"], "hot", video["key"])
 
-    # 2. Warm every edge with every top-K video.
     for video in top_k:
         for region in config.REGIONS:
             api_client.warm_file(region, video["key"])
 
-    # 3. Purge non-top-K from every edge.
     non_top_k = [v for v in videos if v["key"] not in top_k_keys]
     log.info("Purging %d non-top-K videos from all edges.", len(non_top_k))
     for video in non_top_k:
         for region in config.REGIONS:
-            api_client.purge_file(region, video["key"])
+            if api_client.is_cached(video, region):
+                api_client.purge_file(region, video["key"])
 
     log.info("Done. Top-%d videos pre-warmed at all edges.", config.TOP_K)
 

@@ -1,13 +1,3 @@
-"""
-Thin wrappers around the MOG API.
-
-MOG API endpoints used:
-  GET  /videos                           — list all videos with popularity + storage metadata
-  POST /files/move                       — move a file between hot and cold storage
-  POST /files/purge                      — purge all chunks of a file from an edge cache (server-side wildcard)
-  GET  /files/copy?region=&file=&byte_start=&byte_end=  — copy one chunk into an edge cache
-"""
-
 import logging
 import requests
 import config
@@ -75,14 +65,12 @@ def warm_file(region: str, file_key: str):
         resp.raise_for_status()
 
 def regional_views(video: dict, region: str) -> int:
-    """Return the per-region view count for *region* from a VideoResult object."""
     for node in video.get("edgeNodes", []):
         if node["region"] == region:
             return node.get("views", 0)
     return 0
 
 def is_cached(video: dict, region: str) -> bool:
-    """Return whether *video* is cached at the edge node in *region*."""
     for node in video.get("edgeNodes", []):
         if node["region"] == region:
             return node.get("isCached", False)

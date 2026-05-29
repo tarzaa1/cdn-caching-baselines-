@@ -1,13 +1,3 @@
-"""
-Baseline 1 — All-hot, no cache.
-
-Ensures a clean starting state for experiments:
-  1. Any video not already on hot storage is moved there.
-  2. Every video is purged from every edge node's nginx cache.
-
-Run once before starting an experiment.
-"""
-
 import logging
 import sys
 
